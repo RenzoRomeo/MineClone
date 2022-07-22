@@ -2,6 +2,17 @@
 #include "Logging.h"
 #include "Input.h"
 
+void GLAPIENTRY debugCallback(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	LOG(LogType::DEBUG, message);
+}
+
 Window::Window(uint32_t width, uint32_t height, const char* title, bool vSync)
 	: m_width(width), m_height(height)
 {
@@ -35,6 +46,9 @@ Window::Window(uint32_t width, uint32_t height, const char* title, bool vSync)
 	glfwSetScrollCallback(m_nativeWindow, Input::scrollCallback);
 
 	glfwSetInputMode(m_nativeWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(debugCallback, NULL);
 
 	glViewport(0, 0, m_width, m_height);
 	glEnable(GL_DEPTH_TEST);
