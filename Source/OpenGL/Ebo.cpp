@@ -1,5 +1,11 @@
 #include "Ebo.h"
 
+Ebo::Ebo()
+	: m_count(0)
+{
+
+}
+
 Ebo::Ebo(const uint32_t* data, uint32_t count)
 	: m_count(count)
 {

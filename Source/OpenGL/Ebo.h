@@ -5,6 +5,7 @@
 class Ebo
 {
 public:
+	Ebo();
 	Ebo(const uint32_t* data, uint32_t count);
 	~Ebo();
 
