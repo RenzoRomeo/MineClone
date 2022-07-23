@@ -152,6 +152,14 @@
     <ClCompile Include="Source\OpenGL\Texture.cpp" />
     <ClCompile Include="Source\OpenGL\Vao.cpp" />
     <ClCompile Include="Source\OpenGL\Vbo.cpp" />
+    <ClCompile Include="Source\Renderer\BlockMeshGenerator.cpp" />
+    <ClCompile Include="Source\Renderer\BlockTexture.cpp" />
+    <ClCompile Include="Source\Renderer\ChunkMeshGenerator.cpp" />
+    <ClCompile Include="Source\Renderer\Renderer.cpp" />
+    <ClCompile Include="Source\Renderer\RenderObject.cpp" />
+    <ClCompile Include="Source\World\Chunk.cpp" />
+    <ClCompile Include="Source\World\Player.cpp" />
+    <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Vendor\glad.c" />
     <ClCompile Include="Vendor\stb_image.cpp" />
   </ItemGroup>
@@ -167,10 +175,22 @@
     <ClInclude Include="Source\OpenGL\Vao.h" />
     <ClInclude Include="Source\OpenGL\Vbo.h" />
     <ClInclude Include="Source\OpenGL\VboLayout.h" />
+    <ClInclude Include="Source\Renderer\BlockMeshGenerator.h" />
+    <ClInclude Include="Source\Renderer\BlockTexture.h" />
+    <ClInclude Include="Source\Renderer\ChunkMeshGenerator.h" />
+    <ClInclude Include="Source\Renderer\Mesh.h" />
+    <ClInclude Include="Source\Renderer\Renderer.h" />
+    <ClInclude Include="Source\Renderer\RenderObject.h" />
+    <ClInclude Include="Source\Renderer\Scene.h" />
+    <ClInclude Include="Source\World\Block.h" />
+    <ClInclude Include="Source\World\Chunk.h" />
+    <ClInclude Include="Source\World\ChunkGenerator.h" />
+    <ClInclude Include="Source\World\Player.h" />
+    <ClInclude Include="Source\World\World.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
+    <None Include="Resources\Shaders\default.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
