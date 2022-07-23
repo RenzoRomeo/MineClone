@@ -4,6 +4,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/hash.hpp"
 
 // Standard Library
 #include <stdint.h>
@@ -14,3 +18,6 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <memory>
+#include <unordered_map>
+#include <array>
