@@ -147,5 +147,6 @@
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
