@@ -11,3 +11,4 @@ It is my first "big" project regarding computer graphics, so I learned a lot whi
 - Placing / removing blocks.
 - Terrain generation with Perlin noise.
 - Better way to add cubes.
+- GUI.

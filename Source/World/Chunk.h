@@ -23,6 +23,8 @@ public:
 
 	void removeBlock(uint32_t x, uint32_t y, uint32_t z);
 
+	inline glm::ivec2 getPosition() const { return m_position; }
+
 	inline static uint32_t index(uint32_t x, uint32_t y, uint32_t z)
 	{
 		return y * verticalSize * horizontalSize + x * horizontalSize + z;

@@ -15,6 +15,6 @@ public:
 
 private:
 	Window m_window;
-	World m_world;
+	World& m_world;
 	Renderer m_renderer;
 };

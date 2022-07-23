@@ -10,7 +10,7 @@
 
 Game::Game()
 	: m_window(Window(1280, 720, "MineClone", true)),
-	m_world(World()),
+	m_world(World::get()),
 	m_renderer(Renderer())
 {
 }

@@ -16,6 +16,12 @@ World::World()
 	}
 }
 
+World& World::get()
+{
+	static World s_world{};
+	return s_world;
+}
+
 void World::update(float dt)
 {
 	for (auto& [chunkPos, chunk] : m_chunks)

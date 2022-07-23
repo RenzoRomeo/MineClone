@@ -13,7 +13,7 @@ public:
 	static constexpr int32_t worldSize = 1;
 
 public:
-	World();
+	static World& get();
 
 	void update(float dt);
 
@@ -24,6 +24,9 @@ public:
 	std::shared_ptr<Chunk> getChunk(const glm::vec3& position);
 
 	Scene getScene() const;
+
+private:
+	World();
 
 private:
 	Player m_player;
