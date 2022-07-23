@@ -2,19 +2,18 @@
 
 #include "../core.h"
 
-#include "Window.h"
-#include "../World/World.h"
-#include "../Renderer/Renderer.h"
-
-class Game
+struct GameConfig
 {
-public:
-	Game();
+	uint32_t windowWidth;
+	uint32_t windowHeight;
+	bool fullscreen;
+	bool vSync;
+	const char* title;
+};
+
+namespace MineClone
+{
+	void init(GameConfig config);
 
 	void run();
-
-private:
-	Window m_window;
-	World& m_world;
-	Renderer m_renderer;
-};
+}

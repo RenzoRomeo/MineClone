@@ -1,41 +1,72 @@
 #include "Game.h"
 
+#include "Window.h"
 #include "Input.h"
+#include "Logging.h"
+
+#include "../World/World.h"
+
+#include "../Renderer/Renderer.h"
 #include "../OpenGL/Vbo.h"
 #include "../OpenGL/Vao.h"
 #include "../OpenGL/Ebo.h"
 #include "../OpenGL/VboLayout.h"
 #include "../OpenGL/Shader.h"
 
-
-Game::Game()
-	: m_window(Window(1280, 720, "MineClone", true)),
-	m_world(World::get()),
-	m_renderer(Renderer())
+namespace MineClone
 {
-}
-
-void Game::run()
-{
-	float beginTime = glfwGetTime();
-	float endTime;
-	float dt = 0.016f;
-	while (!m_window.shouldClose())
+	namespace
 	{
-		m_window.pollEvents();
-		m_window.clear();
+		std::unique_ptr<Window> window = nullptr;
+		bool initialized = false;
+	}
 
-		m_world.update(dt);
-		m_renderer.renderScene(m_world.getScene());
+	void init(GameConfig config)
+	{
+		window = std::make_unique<Window>(config.windowWidth, config.windowHeight, config.title, config.vSync);
 
-		m_window.swapBuffers();
-		endTime = glfwGetTime();
-		dt = endTime - beginTime;
-		beginTime = endTime;
+		RendererConfig rendererConfig;
+		rendererConfig.vertexShaderSource = "Resources\\Shaders\\default.vert";
+		rendererConfig.fragmentShaderSource = "Resources\\Shaders\\default.frag";
+		rendererConfig.atlasSource = "Resources\\Images\\blocks.png";
 
-		if (Input::isKeyPressed(GLFW_KEY_ESCAPE))
+		Renderer::init(rendererConfig);
+
+		initialized = true;
+	}
+
+	void run()
+	{
+		World& world = World::get();
+
+		if (!initialized)
 		{
-			m_window.close();
+			LOG(LogType::ERROR, "Game has not been initialized.");
+			exit(EXIT_FAILURE);
 		}
+
+		float beginTime = glfwGetTime();
+		float endTime;
+		float dt = 0.016f;
+		while (!window->shouldClose())
+		{
+			window->pollEvents();
+			window->clear();
+		
+			world.update(dt);
+			Renderer::renderScene(world.getScene());
+		
+			window->swapBuffers();
+			endTime = glfwGetTime();
+			dt = endTime - beginTime;
+			beginTime = endTime;
+		
+			if (Input::isKeyPressed(GLFW_KEY_ESCAPE))
+			{
+				window->close();
+			}
+		}
+
+		Renderer::clean();
 	}
 }

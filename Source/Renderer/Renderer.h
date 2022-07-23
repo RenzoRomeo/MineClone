@@ -1,18 +1,17 @@
 #pragma once
 
-#include "../OpenGL/Shader.h"
-#include "../OpenGL/Texture.h"
 #include "Scene.h"
 
-class Renderer
+struct RendererConfig
 {
-public:
-	Renderer();
-	~Renderer();
-
-	void renderScene(Scene scene);
-
-private:
-	Shader m_shader;
-	Texture m_atlas;
+	const char* vertexShaderSource;
+	const char* fragmentShaderSource;
+	const char* atlasSource;
 };
+
+namespace Renderer
+{
+	void init(RendererConfig config);
+	void renderScene(Scene scene);
+	void clean();
+}
