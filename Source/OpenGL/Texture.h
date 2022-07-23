@@ -14,6 +14,10 @@ public:
 	
 	void unbind() const;
 
+	inline int32_t getWidth() const { return m_width; }
+
+	inline int32_t getHeight() const { return m_height; }
+
 private:
 	uint32_t m_id;
 	int32_t m_width, m_height;
