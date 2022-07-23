@@ -12,6 +12,7 @@ Vao::~Vao()
 
 void Vao::addBuffer(const Vbo& vbo, const VboLayout& layout)
 {
+	bind();
 	vbo.bind();
 	const std::vector<VboElement>& elements = layout.getElements();
 	uint32_t offset = 0;
@@ -22,6 +23,8 @@ void Vao::addBuffer(const Vbo& vbo, const VboLayout& layout)
 		glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride(), (const void*)offset);
 		offset += element.count * VboElement::getSizeOfType(element.type);
 	}
+	unbind();
+	vbo.unbind();
 }
 
 void Vao::bind() const
