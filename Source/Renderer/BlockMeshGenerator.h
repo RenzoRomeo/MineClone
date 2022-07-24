@@ -11,7 +11,17 @@ struct BlockVertex
 	glm::vec2 atlasCoords;
 };
 
+enum Sides
+{
+	YP,
+	YN,
+	XP,
+	XN,
+	ZP,
+	ZN
+};
+
 namespace BlockMeshGenerator
 {
-	std::vector<BlockVertex> generateMesh(const Block& block, const glm::ivec3& direction);
+	std::vector<BlockVertex> generateMesh(const Block& block, Sides side);
 }

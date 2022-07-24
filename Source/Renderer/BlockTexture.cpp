@@ -1,18 +1,21 @@
 #include "BlockTexture.h"
 
-glm::ivec2 BlockTexture::getBlockAtlas(const Block& block, const glm::ivec3& direction)
+namespace BlockTexture
 {
-    if (block.type == BlockType::Dirt)
-    {
-        if (direction.y == 1) return { 0, 0 };
-        if (direction.y == -1) return { 2, 0 };
-        return { 1, 0 };
-    }
+	glm::ivec2 getBlockAtlas(const Block& block, Sides side)
+	{
+		if (block.type == BlockType::Dirt)
+		{
+			if (side == Sides::YP) return { 0, 0 };
+			if (side == Sides::YN) return { 2, 0 };
+			return { 1, 0 };
+		}
 
-    if (block.type == BlockType::Wood)
-    {
-        if (direction.y == 1) return { 3, 1 };
-        if (direction.y == -1) return { 3, 1 };
-        return { 2, 1 };
-    }
+		if (block.type == BlockType::Wood)
+		{
+			if (side == Sides::YP) return { 3, 1 };
+			if (side == Sides::YN) return { 3, 1 };
+			return { 2, 1 };
+		}
+	}
 }

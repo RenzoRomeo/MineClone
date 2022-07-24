@@ -6,9 +6,9 @@ namespace BlockMeshGenerator
 {
 	namespace
 	{
-		const std::array<std::array<std::pair<glm::vec3, glm::vec2>, 6>, 6> vertices = { {
+		const std::array<std::array<std::pair<glm::vec3, glm::vec2>, 6>, 6> faceVertices = { {
 		   {{
-				   // top
+				   // YP
 				   {{0, 1, 1}, {1, 0}},
 				   {{1, 1, 1}, {1, 1}},
 				   {{0, 1, 0}, {0, 0}},
@@ -17,7 +17,7 @@ namespace BlockMeshGenerator
 				   {{0, 1, 0}, {0, 0}},
 				}},
 				{{
-						// +x east
+						// XP
 						{{1, 1, 1}, {1, 0}},
 						{{1, 0, 1}, {1, 1}},
 						{{1, 1, 0}, {0, 0}},
@@ -26,7 +26,7 @@ namespace BlockMeshGenerator
 						{{1, 1, 0}, {0, 0}},
 					 }},
 					 {{
-							 //-x west
+							 // XN
 							 {{0, 1, 0}, {1, 0}},
 							 {{0, 0, 0}, {1, 1}},
 							 {{0, 1, 1}, {0, 0}},
@@ -35,7 +35,7 @@ namespace BlockMeshGenerator
 							 {{0, 1, 1}, {0, 0}},
 						  }},
 						  {{
-								  //-z north
+								  // ZN
 								  {{1, 1, 0}, {1, 0}},
 								  {{1, 0, 0}, {1, 1}},
 								  {{0, 1, 0}, {0, 0}},
@@ -45,7 +45,7 @@ namespace BlockMeshGenerator
 							   }},
 
 							   {{
-									   // +z south
+									   // ZP
 									   {{0, 1, 1}, {1, 0}},
 									   {{0, 0, 1}, {1, 1}},
 									   {{1, 1, 1}, {0, 0}},
@@ -54,7 +54,7 @@ namespace BlockMeshGenerator
 									   {{1, 1, 1}, {0, 0}},
 									}},
 									{{
-											// bottom
+											// YN
 											{{1, 0, 1}, {1, 0}},
 											{{0, 0, 1}, {1, 1}},
 											{{1, 0, 0}, {0, 0}},
@@ -63,46 +63,38 @@ namespace BlockMeshGenerator
 											{{1, 0, 0}, {0, 0}},
 										 }},
 									  } };
-
-		const std::array<std::pair<glm::vec3, glm::vec2>, 6>& getFaceVerticesFromDirection(const glm::ivec3& vec) {
-			switch (vec.x) {
-			case 1:
-				return vertices[1];
-			case -1:
-				return vertices[2];
-			default:
-				break;
-			}
-
-			switch (vec.y) {
-			case 1:
-				return vertices[0];
-			case -1:
-				return vertices[5];
-			default:
-				break;
-			}
-
-			switch (vec.z) {
-			case 1:
-				return vertices[4];
-			case -1:
-				return vertices[3];
-			default:
-				break;
-			}
-		}
 	}
 
-	std::vector<BlockVertex> BlockMeshGenerator::generateMesh(const Block& block, const glm::ivec3& direction)
+	std::vector<BlockVertex> BlockMeshGenerator::generateMesh(const Block& block, Sides side)
 	{
 		std::vector<BlockVertex> vertices;
 
-		const std::array<std::pair<glm::vec3, glm::vec2>, 6>& posAndUv = getFaceVerticesFromDirection(direction);
-
-		for (const auto& [pos, uv] : posAndUv)
+		int index = 0;
+		switch (side)
 		{
-			vertices.push_back({pos, uv, BlockTexture::getBlockAtlas(block, direction)});
+		case Sides::XP:
+			index = 1;
+			break;
+		case Sides::XN:
+			index = 2;
+			break;
+		case Sides::ZP:
+			index = 4;
+			break;
+		case Sides::ZN:
+			index = 3;
+			break;
+		case Sides::YP:
+			index = 0;
+			break;
+		case Sides::YN:
+			index = 5;
+			break;
+		}
+
+		for (const auto& [pos, uv] : faceVertices[index])
+		{
+			vertices.push_back({ pos, uv, BlockTexture::getBlockAtlas(block, side) });
 		}
 
 		return vertices;

@@ -4,150 +4,187 @@
 #include "../World/Chunk.h"
 #include "BlockMeshGenerator.h"
 
-const glm::ivec3 sides[] = {
-	{1, 0, 0},
-	{-1, 0, 0},
-	{0, 1, 0},
-	{0, -1, 0},
-	{0, 0, 1},
-	{0, 0, -1}
-};
 
-enum Sides
+namespace ChunkMeshGenerator
 {
-	XP,
-	XN,
-	ZP,
-	ZN,
-	YP,
-	YN
-};
-
-bool renderBorderFace(std::shared_ptr<const Chunk> chunk, int x, int y, int z, const glm::vec3& direction)
-{
-	World& world = World::get();
-	glm::vec2 chunkPos = chunk->getPosition();
-
-	std::shared_ptr<const Chunk> neighbor = world.getChunk(glm::ivec2{ chunkPos.x + direction.x, chunkPos.y + direction.z });
-
-	if (neighbor == nullptr) return true;
-
-	if (direction.x == 1.0f) return !neighbor->getBlock(0, y, z).solid;
-	if (direction.x == -1.0f) return !neighbor->getBlock(Chunk::horizontalSize - 1, y, z).solid;
-	if (direction.z == 1.0f) return !neighbor->getBlock(x, y, 0).solid;
-	if (direction.z == -1.0f) return !neighbor->getBlock(x, y, Chunk::horizontalSize - 1).solid;
-
-	return true;
-}
-
-Mesh ChunkMeshGenerator::generateMesh(std::shared_ptr<const Chunk> chunk)
-{
-	std::vector<BlockVertex> chunkVertices;
-	for (int y = 0; y < Chunk::verticalSize; y++)
+	namespace
 	{
-		for (int x = 0; x < Chunk::horizontalSize; x++)
+		bool isEdgeBlock(int x, int y, int z)
 		{
-			for (int z = 0; z < Chunk::horizontalSize; z++)
-			{
-				const Block& block = chunk->getBlock(x, y, z);
+			return x == 0 || x == Chunk::horizontalSize - 1 || z == 0 || z == Chunk::horizontalSize - 1 || y == 0 || y == Chunk::verticalSize - 1;
+		}
 
-				if (!block.solid) continue;
+		bool isEdgeFace(int x, int y, int z, Sides side)
+		{
+			if (!isEdgeBlock(x, y, z)) return false;
 
-				std::vector<BlockVertex> blockVertices;
+			if (x == 0 && side == Sides::XN) return true;
+			if (x == Chunk::horizontalSize - 1 && side == Sides::XP) return true;
+			if (y == 0 && side == Sides::YN) return true;
+			if (y == Chunk::verticalSize - 1 && side == Sides::YP) return true;
+			if (z == 0 && side == Sides::ZN) return true;
+			if (z == Chunk::horizontalSize - 1 && side == Sides::ZP) return true;
 
-				if (x == 0 && renderBorderFace(chunk, x, y, z, { -1, 0, 0 }))
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { -1, 0, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				} 
-				else if (x == Chunk::horizontalSize - 1 && renderBorderFace(chunk, x, y, z, { 1, 0, 0 }))
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 1, 0, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
-				if (z == 0 && renderBorderFace(chunk, x, y, z, { 0, 0, -1 }))
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, 0, -1 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
-				else if (z == Chunk::horizontalSize - 1 && renderBorderFace(chunk, x, y, z, { 0, 0, 1 }))
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, 0, 1 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+			return true;
+		}
 
-				// Faces on vertical extremes always render.
-				if (y == 0)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, -1, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
-				else if (y == Chunk::verticalSize - 1)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, 1, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+		bool isBlockInsideChunk(int x, int y, int z)
+		{
+			return !(x < 0 || x >= Chunk::horizontalSize || z < 0 || z >= Chunk::horizontalSize || y < 0 || y >= Chunk::verticalSize);
+		}
 
-				// Check faces with other blocks inside this chunk
-				if (x + 1 < Chunk::horizontalSize && !chunk->getBlock(x + 1, y, z).solid)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 1, 0, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+		bool isNeighborSolidOutside(std::shared_ptr<const Chunk> chunk, int x, int y, int z, Sides side)
+		{
+			return false; // Culling between chunks is disabled for now... Couldn't figure out the bug yet, but it is within this function, I think.
+			// There can't be chunks on top of chunks, so no solid block will be on top of a chunk.
+			if (side == Sides::YP || side == Sides::YN)
+				return false;
 
-				if (x - 1 >= 0 && !chunk->getBlock(x - 1, y, z).solid)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { -1, 0, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+			World& world = World::get();
+			glm::ivec2 chunkPos = chunk->getPosition();
 
-				if (z + 1 < Chunk::horizontalSize && !chunk->getBlock(x, y, z + 1).solid)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, 0, 1 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+			int xOff = 0;
+			int zOff = 0;
+			if (side == Sides::XP) xOff = 1;
+			else if (side == Sides::XN) xOff = -1;
+			else if (side == Sides::ZP) zOff = 1;
+			else if (side == Sides::ZN) zOff = -1;
 
-				if (z - 1 >= 0 && !chunk->getBlock(x, y, z - 1).solid)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, 0, -1 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+			glm::ivec2 neighborCoords{ chunkPos.x + xOff, chunkPos.y + zOff };
+			std::shared_ptr<const Chunk> neighbor = world.getChunk(neighborCoords);
 
-				if (y + 1 < Chunk::verticalSize && !chunk->getBlock(x, y + 1, z).solid)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, 1, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+			if (neighbor == nullptr) return false;
 
-				if (y - 1 >= 0 && !chunk->getBlock(x, y - 1, z).solid)
-				{
-					std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, { 0, -1, 0 });
-					blockVertices.insert(blockVertices.end(), v.begin(), v.end());
-				}
+			if (side == Sides::XP) return neighbor->getBlock(0, y, z).solid;
+			if (side == Sides::XN) return neighbor->getBlock((int)Chunk::horizontalSize - 1, y, z).solid;
+			if (side == Sides::ZP) return neighbor->getBlock(x, y, 0).solid;
+			if (side == Sides::ZN) return neighbor->getBlock(x, y, (int)Chunk::horizontalSize - 1).solid;
 
-				for (auto& v : blockVertices)
-				{
-					v.position.x += x;
-					v.position.y += y;
-					v.position.z += z;
-				}
+			return false;
+		}
 
-				chunkVertices.insert(chunkVertices.end(), blockVertices.begin(), blockVertices.end());
-			}
+		bool isNeighborSolidInside(std::shared_ptr<const Chunk> chunk, int x, int y, int z, Sides side)
+		{
+			if (side == Sides::YP)
+				if (!isBlockInsideChunk(x, y + 1, z))
+					return false;
+				else
+					return chunk->getBlock(x, y + 1, z).solid;
+
+			if (side == Sides::YN)
+				if (!isBlockInsideChunk(x, y - 1, z))
+					return false;
+				else
+					return chunk->getBlock(x, y - 1, z).solid;
+
+			if (side == Sides::XP)
+				if (!isBlockInsideChunk(x + 1, y, z))
+					return false;
+				else
+					return chunk->getBlock(x + 1, y, z).solid;
+
+			if (side == Sides::XN)
+				if (!isBlockInsideChunk(x - 1, y, z))
+					return false;
+				else
+					return chunk->getBlock(x - 1, y, z).solid;
+
+			if (side == Sides::ZP)
+				if (!isBlockInsideChunk(x, y, z + 1))
+					return false;
+				else
+					return chunk->getBlock(x, y, z + 1).solid;
+
+			if (side == Sides::ZN)
+				if (!isBlockInsideChunk(x, y, z - 1))
+					return false;
+				else
+					return chunk->getBlock(x, y, z - 1).solid;
+
+			return false;
+		}
+
+		bool shouldRenderFace(std::shared_ptr<const Chunk> chunk, int x, int y, int z, Sides side)
+		{
+			return !isNeighborSolidInside(chunk, x, y, z, side) && isEdgeFace(x, y, z, side) && !isNeighborSolidOutside(chunk, x, y, z, side);
 		}
 	}
 
-	std::shared_ptr<Vao> vao = std::make_shared<Vao>();
-	vao->bind();
+	Mesh generateMesh(std::shared_ptr<const Chunk> chunk)
+	{
+		std::vector<BlockVertex> chunkVertices;
+		for (int y = 0; y < Chunk::verticalSize; y++)
+		{
+			for (int x = 0; x < Chunk::horizontalSize; x++)
+			{
+				for (int z = 0; z < Chunk::horizontalSize; z++)
+				{
+					const Block& block = chunk->getBlock(x, y, z);
 
-	Vbo vbo(chunkVertices.data(), chunkVertices.size() * sizeof(BlockVertex));
-	vbo.bind();
+					if (!block.solid) continue;
 
-	VboLayout layout;
-	layout.push<float>(3);
-	layout.push<float>(2);
-	layout.push<float>(2);
-	vao->addBuffer(vbo, layout);
+					std::vector<BlockVertex> blockVertices;
 
-	return Mesh(vao, chunkVertices.size());
+					if (shouldRenderFace(chunk, x, y, z, Sides::YP))
+					{
+						std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, Sides::YP);
+						blockVertices.insert(blockVertices.end(), v.begin(), v.end());
+					}
+
+					if (shouldRenderFace(chunk, x, y, z, Sides::YN))
+					{
+						std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, Sides::YN);
+						blockVertices.insert(blockVertices.end(), v.begin(), v.end());
+					}
+
+					if (shouldRenderFace(chunk, x, y, z, Sides::XP))
+					{
+						std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, Sides::XP);
+						blockVertices.insert(blockVertices.end(), v.begin(), v.end());
+					}
+
+					if (shouldRenderFace(chunk, x, y, z, Sides::XN))
+					{
+						std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, Sides::XN);
+						blockVertices.insert(blockVertices.end(), v.begin(), v.end());
+					}
+
+					if (shouldRenderFace(chunk, x, y, z, Sides::ZP))
+					{
+						std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, Sides::ZP);
+						blockVertices.insert(blockVertices.end(), v.begin(), v.end());
+					}
+
+					if (shouldRenderFace(chunk, x, y, z, Sides::ZN))
+					{
+						std::vector<BlockVertex> v = BlockMeshGenerator::generateMesh(block, Sides::ZN);
+						blockVertices.insert(blockVertices.end(), v.begin(), v.end());
+					}
+
+					for (auto& v : blockVertices)
+					{
+						v.position.x += (float)x;
+						v.position.y += (float)y;
+						v.position.z += (float)z;
+					}
+
+					chunkVertices.insert(chunkVertices.end(), blockVertices.begin(), blockVertices.end());
+				}
+			}
+		}
+
+		std::shared_ptr<Vao> vao = std::make_shared<Vao>();
+		vao->bind();
+
+		Vbo vbo(chunkVertices.data(), chunkVertices.size() * sizeof(BlockVertex));
+		vbo.bind();
+
+		VboLayout layout;
+		layout.push<float>(3);
+		layout.push<float>(2);
+		layout.push<float>(2);
+		vao->addBuffer(vbo, layout);
+
+		return Mesh(vao, chunkVertices.size());
+	}
 }
