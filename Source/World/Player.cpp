@@ -52,6 +52,7 @@ Player::Player(glm::vec3 position, glm::vec3 front)
 
 void Player::update(float dt)
 {
+	LOG(m_camera.position);
 	processMouse(dt);
 	processKeyboard(dt);
 }

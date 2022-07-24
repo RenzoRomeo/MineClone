@@ -10,7 +10,7 @@ class Chunk;
 class World
 {
 public:
-	static constexpr int32_t worldSize = 1;
+	static constexpr int32_t worldSize = 2;
 
 public:
 	static World& get();

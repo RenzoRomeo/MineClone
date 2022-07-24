@@ -1,19 +1,24 @@
 #include "World.h"
 
 #include "ChunkGenerator.h"
+#include "Chunk.h"
 #include "../Renderer/ChunkMeshGenerator.h"
 
 World::World()
-	: m_player(Player({0, 6, 0}))
+	: m_player(Player({ 0, 6, 0 }))
 {
-	for (int32_t x = -worldSize; x < worldSize; x++)
+	for (int x = 0; x < worldSize; x++)
 	{
-		for (int32_t z = -worldSize; z < worldSize; z++)
+		for (int z = 0; z < worldSize; z++)
 		{
-			glm::vec2 chunkPos{ x, z };
+			glm::ivec2 chunkPos{ x, z };
 			m_chunks[chunkPos] = ChunkGenerator::generateChunk(chunkPos);
 		}
 	}
+	// m_chunks[glm::ivec2{ 0, 0 }] = ChunkGenerator::generateChunk(glm::ivec2{ 0, 0 });
+	// m_chunks[glm::ivec2{ 1, 0 }] = ChunkGenerator::generateChunk(glm::ivec2{ 1, 0 });
+	// m_chunks[glm::ivec2{ 2, 0 }] = ChunkGenerator::generateChunk(glm::ivec2{ 2, 0 });
+	// m_chunks[glm::ivec2{ 1, 1 }] = ChunkGenerator::generateChunk(glm::ivec2{ 1, 1 });
 }
 
 World& World::get()
@@ -66,7 +71,9 @@ Scene World::getScene() const
 
 	for (const auto& [chunkPos, chunk] : m_chunks)
 	{
-		Transform t{ glm::vec3{1.0f}, glm::vec3{(float)chunkPos.x * Chunk::horizontalSize, 0.0f, (float)chunkPos.y * Chunk::horizontalSize}};
+		glm::vec3 scale{ 1.0f };
+		glm::vec3 position{ (float)chunkPos.x * Chunk::horizontalSize, 0.0f, (float)chunkPos.y * Chunk::horizontalSize };
+		Transform t{scale, position};
 		RenderObject ro{ ChunkMeshGenerator::generateMesh(chunk), t };
 		scene.renderObjects.push_back(ro);
 	}

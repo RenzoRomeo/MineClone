@@ -158,6 +158,7 @@
     <ClCompile Include="Source\Renderer\Renderer.cpp" />
     <ClCompile Include="Source\Renderer\RenderObject.cpp" />
     <ClCompile Include="Source\World\Chunk.cpp" />
+    <ClCompile Include="Source\World\ChunkGenerator.cpp" />
     <ClCompile Include="Source\World\Player.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Vendor\glad.c" />
@@ -192,6 +193,9 @@
     <None Include="Resources\Shaders\default.vert" />
     <None Include="Resources\Shaders\default.frag" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="vert.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
