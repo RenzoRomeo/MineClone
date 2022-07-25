@@ -24,7 +24,7 @@ inline static void LOG(LogType type, std::string message)
 		std::cerr << "ERROR";
 		break;
 	}
-	std::cerr << "] - " << message << '\n';
+	std::cerr << "] " << message << '\n';
 }
 
 inline static void LOG(const glm::vec3& v)
