@@ -7,11 +7,6 @@
 #include "../World/World.h"
 
 #include "../Renderer/Renderer.h"
-#include "../OpenGL/Vbo.h"
-#include "../OpenGL/Vao.h"
-#include "../OpenGL/Ebo.h"
-#include "../OpenGL/VboLayout.h"
-#include "../OpenGL/Shader.h"
 
 namespace MineClone
 {
