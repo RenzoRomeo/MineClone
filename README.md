@@ -1,15 +1,21 @@
 # MineClone
 
-This is not the first Minecraft clone that I made, but it is the best one I made so far.
+This is a Minecraft clone that I made using OpenGL.
 
-It is my first "big" project regarding computer graphics, so I learned a lot while working on it.
+I always loved this game, and recently I became very interested in computer graphics and game development, so I figured the best way to learn how to make a game is to make one!
+
+# Dependencies
+- OpenGL (Graphics API)
+- GLFW (Window handling / OpenGL context)
+- GLAD (OpenGL Bindings)
+- GLM (Maths)
+- stb_image (Loading images)
 
 # TODO
 
 - Chunk culling.
 - Jumping / falling.
 - Placing / removing blocks.
-- Tweak terrain generation.
-- Better way to add cubes.
+- Better way to add cubes. Something like yaml.
 - GUI.
-- Multithreading.
+- Multithreading for creating chunk meshes and other stuff.
