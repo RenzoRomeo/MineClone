@@ -10,10 +10,10 @@ Vao::~Vao()
 	glDeleteVertexArrays(1, &m_id);
 }
 
-void Vao::addBuffer(const Vbo& vbo, const VboLayout& layout)
+void Vao::addBuffer(std::shared_ptr<const Vbo> vbo, const VboLayout& layout)
 {
 	bind();
-	vbo.bind();
+	vbo->bind();
 	const std::vector<VboElement>& elements = layout.getElements();
 	uint32_t offset = 0;
 	for (size_t i = 0; i < elements.size(); i++)
@@ -24,7 +24,7 @@ void Vao::addBuffer(const Vbo& vbo, const VboLayout& layout)
 		offset += element.count * VboElement::getSizeOfType(element.type);
 	}
 	unbind();
-	vbo.unbind();
+	vbo->unbind();
 }
 
 void Vao::bind() const

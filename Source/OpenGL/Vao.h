@@ -11,7 +11,7 @@ public:
 	Vao();
 	~Vao();
 
-	void addBuffer(const Vbo& vbo, const VboLayout& layout);
+	void addBuffer(std::shared_ptr<const Vbo> vbo, const VboLayout& layout);
 
 	void bind() const;
 
