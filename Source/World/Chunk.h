@@ -9,7 +9,7 @@ class Chunk
 {
 public:
 	static constexpr uint32_t horizontalSize = 10;
-	static constexpr uint32_t verticalSize = 5;
+	static constexpr uint32_t verticalSize = 10;
 
 public:
 	Chunk(const glm::ivec2 position);
