@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Application\Game.cpp" />
     <ClCompile Include="Source\Application\Input.cpp" />
+    <ClCompile Include="Source\Application\Settings.cpp" />
     <ClCompile Include="Source\Application\Window.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\OpenGL\Ebo.cpp" />
@@ -167,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Application\Input.h" />
     <ClInclude Include="Source\Application\Logging.h" />
+    <ClInclude Include="Source\Application\Settings.h" />
     <ClInclude Include="Source\Application\Window.h" />
     <ClInclude Include="Source\core.h" />
     <ClInclude Include="Source\Application\Game.h" />

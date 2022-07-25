@@ -5,13 +5,6 @@
 class Player
 {
 public:
-	struct Configuration
-	{
-		float mouseSensitivity = 5.0f;
-		float movementSpeed = 5.0f;
-		float gravityAcc = 2.0f;
-	};
-
 	struct Camera
 	{
 		float yaw;
@@ -43,7 +36,8 @@ private:
 	void processKeyboard(float dt);
 
 private:
-	Configuration m_config;
 	Camera m_camera;
 	glm::vec3 m_velocity;
+	float m_movementSpeed;
+	float m_height = 2.0f;
 };

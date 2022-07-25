@@ -5,7 +5,7 @@
 #include "../Renderer/ChunkMeshGenerator.h"
 
 World::World()
-	: m_player(Player({ 0, 6, 0 }))
+	: m_gravity(1.0f), m_player(Player(glm::vec3{0, Chunk::verticalSize, 0}))
 {
 	for (int x = 0; x < worldSize; x++)
 	{
@@ -15,10 +15,6 @@ World::World()
 			m_chunks[chunkPos] = ChunkGenerator::generateChunk(chunkPos);
 		}
 	}
-	// m_chunks[glm::ivec2{ 0, 0 }] = ChunkGenerator::generateChunk(glm::ivec2{ 0, 0 });
-	// m_chunks[glm::ivec2{ 1, 0 }] = ChunkGenerator::generateChunk(glm::ivec2{ 1, 0 });
-	// m_chunks[glm::ivec2{ 2, 0 }] = ChunkGenerator::generateChunk(glm::ivec2{ 2, 0 });
-	// m_chunks[glm::ivec2{ 1, 1 }] = ChunkGenerator::generateChunk(glm::ivec2{ 1, 1 });
 }
 
 World& World::get()

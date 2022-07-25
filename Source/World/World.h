@@ -25,10 +25,13 @@ public:
 
 	Scene getScene() const;
 
+	float getGravity() const { return m_gravity; }
+
 private:
 	World();
 
 private:
 	Player m_player;
+	float m_gravity;
 	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>> m_chunks;
 };

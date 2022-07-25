@@ -75,6 +75,9 @@
     <ClCompile Include="Source\World\ChunkGenerator.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Application\Settings.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Game.h">
@@ -144,6 +147,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Source\Renderer\BlockTexture.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Settings.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
