@@ -13,14 +13,13 @@ I always loved this game, and recently I became very interested in computer grap
 
 # TODO
 
-- Global settings namespace.
-- Chunk culling.
+- Cull faces between chunks.
 - Jumping / falling.
 - Player / terrain collision.
 - Placing / removing blocks.
-- Better way to add cubes. Something like yaml.
+- Better way to add cubes.
 - GUI.
 - Multithreading for creating chunk meshes and other stuff.
 - Save / load settings.
 - Save / load world.
-- Inventory.
+- Make chunks persist when not rendered.
