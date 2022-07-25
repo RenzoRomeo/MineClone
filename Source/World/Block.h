@@ -4,7 +4,10 @@ enum BlockType
 {
 	Air,
 	Dirt,
-	Wood
+	Grass,
+	Wood,
+	Planks,
+	Stone,
 };
 
 struct Block
