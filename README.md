@@ -9,6 +9,7 @@ It is my first "big" project regarding computer graphics, so I learned a lot whi
 - Chunk culling.
 - Jumping / falling.
 - Placing / removing blocks.
-- Terrain generation with Perlin noise.
+- Tweak terrain generation.
 - Better way to add cubes.
 - GUI.
+- Multithreading.

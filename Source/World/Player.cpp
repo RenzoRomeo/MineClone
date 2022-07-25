@@ -23,7 +23,7 @@ Player::Player()
 	m_camera.up = m_camera.worldUp;
 	m_camera.right = { 0, 0, 1 };
 	m_camera.pitch = 0.0f;
-	m_camera.yaw = -90.0f;
+	m_camera.yaw = 0.0f;
 	m_camera.position = { 0,0,0 };
 
 	m_camera.updateVectors();
@@ -39,7 +39,7 @@ Player::Player(glm::vec3 position)
 	m_camera.up = m_camera.worldUp;
 	m_camera.right = { 0, 0, 1 };
 	m_camera.pitch = 0.0f;
-	m_camera.yaw = -90.0f;
+	m_camera.yaw = 0.0f;
 	m_camera.position = position;
 
 	m_camera.updateVectors();

@@ -56,8 +56,9 @@ Window::Window(uint32_t width, uint32_t height, const char* title, bool vSync)
 	glDebugMessageCallback(debugCallback, NULL);
 
 	glViewport(0, 0, m_width, m_height);
+
 	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
 }
 
 Window::~Window()

@@ -74,7 +74,7 @@ Scene World::getScene() const
 		glm::vec3 scale{ 1.0f };
 		glm::vec3 position{ (float)chunkPos.x * Chunk::horizontalSize, 0.0f, (float)chunkPos.y * Chunk::horizontalSize };
 		Transform t{scale, position};
-		RenderObject ro{ ChunkMeshGenerator::generateMesh(chunk), t };
+		RenderObject ro{ chunk->getMesh(), t};
 		scene.renderObjects.push_back(ro);
 	}
 
