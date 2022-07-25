@@ -6,5 +6,5 @@ class Chunk;
 
 namespace ChunkMeshGenerator
 {
-	Mesh generateMesh(std::shared_ptr<const Chunk> chunk);
+	Mesh generateMesh(Chunk* chunk);
 }

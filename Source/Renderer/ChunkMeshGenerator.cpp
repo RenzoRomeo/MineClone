@@ -33,9 +33,10 @@ namespace ChunkMeshGenerator
 			return !(x < 0 || x >= Chunk::horizontalSize || z < 0 || z >= Chunk::horizontalSize || y < 0 || y >= Chunk::verticalSize);
 		}
 
-		bool isNeighborSolidOutside(std::shared_ptr<const Chunk> chunk, int x, int y, int z, Sides side)
+		bool isNeighborSolidOutside(Chunk* chunk, int x, int y, int z, Sides side)
 		{
-			return false; // Culling between chunks is disabled for now... Couldn't figure out the bug yet, but it is within this function, I think.
+			return false;
+			// Culling between chunks is disabled for now...
 			// There can't be chunks on top of chunks, so no solid block will be on top of a chunk.
 			if (side == Sides::YP || side == Sides::YN)
 				return false;
@@ -63,7 +64,7 @@ namespace ChunkMeshGenerator
 			return false;
 		}
 
-		bool isNeighborSolidInside(std::shared_ptr<const Chunk> chunk, int x, int y, int z, Sides side)
+		bool isNeighborSolidInside(Chunk* chunk, int x, int y, int z, Sides side)
 		{
 			if (side == Sides::YP)
 				if (!isBlockInsideChunk(x, y + 1, z))
@@ -104,15 +105,15 @@ namespace ChunkMeshGenerator
 			return false;
 		}
 
-		bool shouldRenderFace(std::shared_ptr<const Chunk> chunk, int x, int y, int z, Sides side)
+		bool shouldRenderFace(Chunk* chunk, int x, int y, int z, Sides side)
 		{
-			return !isNeighborSolidInside(chunk, x, y, z, side) && isEdgeFace(x, y, z, side) && !isNeighborSolidOutside(chunk, x, y, z, side);
+			return !isNeighborSolidInside(chunk, x, y, z, side) && !isNeighborSolidOutside(chunk, x, y, z, side);
 		}
 	}
 
-	Mesh generateMesh(std::shared_ptr<const Chunk> chunk)
+	Mesh generateMesh(Chunk* chunk)
 	{
-		std::vector<BlockVertex> chunkVertices;
+		auto chunkVertices = std::make_shared<std::vector<BlockVertex>>();
 		for (int y = 0; y < Chunk::verticalSize; y++)
 		{
 			for (int x = 0; x < Chunk::horizontalSize; x++)
@@ -168,7 +169,7 @@ namespace ChunkMeshGenerator
 						v.position.z += (float)z;
 					}
 
-					chunkVertices.insert(chunkVertices.end(), blockVertices.begin(), blockVertices.end());
+					chunkVertices->insert(chunkVertices->end(), blockVertices.begin(), blockVertices.end());
 				}
 			}
 		}
@@ -176,8 +177,8 @@ namespace ChunkMeshGenerator
 		std::shared_ptr<Vao> vao = std::make_shared<Vao>();
 		vao->bind();
 
-		Vbo vbo(chunkVertices.data(), chunkVertices.size() * sizeof(BlockVertex));
-		vbo.bind();
+		std::shared_ptr<Vbo> vbo = std::make_shared<Vbo>(chunkVertices->data(), chunkVertices->size() * sizeof(BlockVertex));
+		vbo->bind();
 
 		VboLayout layout;
 		layout.push<float>(3);
@@ -185,6 +186,8 @@ namespace ChunkMeshGenerator
 		layout.push<float>(2);
 		vao->addBuffer(vbo, layout);
 
-		return Mesh(vao, chunkVertices.size());
+		uint32_t nVert = chunkVertices->size();
+		chunkVertices.reset();
+		return Mesh{ vao, vbo, nVert };
 	}
 }
