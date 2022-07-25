@@ -152,7 +152,4 @@
     <None Include="Resources\Shaders\default.vert" />
     <None Include="README.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="vert.txt" />
-  </ItemGroup>
 </Project>

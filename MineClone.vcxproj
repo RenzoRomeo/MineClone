@@ -194,9 +194,6 @@
     <None Include="Resources\Shaders\default.frag" />
     <None Include="README.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="vert.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
