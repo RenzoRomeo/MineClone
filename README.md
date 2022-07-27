@@ -21,6 +21,7 @@ I always loved this game, and recently I became very interested in computer grap
 
 # TODO
 
+- Greedy meshing.
 - Cull faces between chunks.
 - Jumping / falling.
 - Player / terrain collision.
